@@ -295,6 +295,11 @@ public class JavaSocketBridge extends JApplet {
 
 											System.out.println("name is "+name);
 
+											
+											Object[] arguments = new Object[1];
+											arguments[0] = receivedHexBytes;
+											
+											String hexContentObjectReturned = (String)browser.call("processInterest", arguments);
 											//connections.put(name, sChannel);
 
 											//System.out.println("name is "+name);
@@ -304,7 +309,8 @@ public class JavaSocketBridge extends JApplet {
 
 											//byte[] output = hex2Bytes("048202aa03b208855dea25cca4d3967c774cc6e709a140d91f9d74e97a665cbb106568ee94f998d8b22fbe2b8d2fc43bd9363b501a50f2d770a7882aaf0792c20359f54da27d4a5b5a29be7d349c656e60fd37c92cf4e4aae256af04161e561aa4323512b38799c43d7a2ec4e35c3e19599b12c5ee3a5f0994837461c05c294a8b596f960e9287520000f2faad726f63636f000001a203e2028548398bad0eeb58e9cc64720e84f4947fe1c1eb310055181ed0b4c2d920ef6e590002bab504fcc5336e9c0001e201da0a9530819f300d06092a864886f70d010101050003818d003081890281810092e67426906bae66a3f4910bade5a2d24e2b7ed0d7a3e16f368c258e848f30115f6e95f5e0ee64505ed3da08be6ee599d395f611ffb096a9c258171518f0c6b3612a94681d29e44619227ac268e5d450abac89820d96188f507d15fb40d8780ccb76a012f7ce4f4efe2b8ba431ef993e31da867adffb069003808bceef9ff4d10203010001000000019abd424f4e4a4f55520000"); 
 
-											byte[] output = hex2Bytes(toReturn); 
+//											byte[] output = hex2Bytes(toReturn); 
+											byte[] output = hex2Bytes(hexContentObjectReturned); 
 
 
 											ByteBuffer outputBuffer = ByteBuffer.wrap(output);

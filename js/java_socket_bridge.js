@@ -74,7 +74,7 @@ function processInterest(interest){
 	var signature = new Signature();
 	
 	
-	var co = new ContentObject(contentname,signedInfo,content,signature); 
+	var co = new ContentObject("test",signedInfo,"Ceci est un test",signature); 
 	
 	co.sign();
 	
@@ -82,7 +82,10 @@ function processInterest(interest){
 	
 	co.encode(encoder);
 	
-	return encoder.ostream;
+	var output = encodeToHexContentObject(co);
+
+	
+	return output;
 }
 
 function on_socket_received_interest(hex,name){
