@@ -54,6 +54,37 @@ function put(host,port,data,name,toReturn){
 	}
 }
 
+/**
+ * Process an incoming interest and return the corresponding ContentObject, or NULL
+ * if none corresponds or if the interest is malformed
+ * @param {byte[]} interest: the interest to process
+ * @returns {byte[]} a ContentObject corresponding to the interest, or NULL
+ */
+function processInterest(interest){
+	
+	//TODO Debug
+	console.log("Interest received is: ", interest);
+	
+	var signedInfo = new SignedInfo();
+	
+	signedInfo.setFields();
+	//var signatureBits = generateSignatureBits(contentname,content,signedInfo);
+	
+	//witness is null
+	var signature = new Signature();
+	
+	
+	var co = new ContentObject(contentname,signedInfo,content,signature); 
+	
+	co.sign();
+	
+	var encoder = new BinaryXMLEncoder();
+	
+	co.encode(encoder);
+	
+	return encoder.ostream;
+}
+
 function on_socket_received_interest(hex,name){
 	
 	if(LOG>3)console.log('received interest from host'+ host +':'+port+' with name '+name);
