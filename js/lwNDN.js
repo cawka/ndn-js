@@ -131,6 +131,7 @@ lwNDN.prototype.put = function(name,content){
 	
 	var outputHex = encodeToHexContentObject(co);
 	
+	registerContentObject(name, outputHex);
 	//console.log('SENDING ANSWER');
 
 	//return get_java_socket_bridge().putAnswer(outputHex,name);

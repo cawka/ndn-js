@@ -17,6 +17,8 @@ var ndnurl=null;
 
 var registeredPrefixes ={};
 
+var contentObjectMap = {};
+
 /**
  * Add a trim funnction for Strings
  */
@@ -54,38 +56,69 @@ function put(host,port,data,name,toReturn){
 	}
 }
 
+
+/**
+ * Adds the given ContentObject to the list of registered ContentObject, corresponding to the
+ * given name. This is done after creating a face for this name, and will tell processInterest(interest)
+ * which ContentObject return when receiving an interest.
+ * @param {String} name: the name of this ContentObject
+ * @param {Hex String} contentObject: the ContentObject to register
+ */
+function registerContentObject(name, contentObject){
+	contentObjectMap[name] = contentObject;
+}
+
 /**
  * Process an incoming interest and return the corresponding ContentObject, or NULL
  * if none corresponds or if the interest is malformed
  * @param {byte[]} interest: the interest to process
  * @returns {byte[]} a ContentObject corresponding to the interest, or NULL
  */
-function processInterest(interest){
+function processInterest(hexInterest){
 	
 	//TODO Debug
-	console.log("Interest received is: ", interest);
+	console.log("Interest received is: ", hexInterest);
 	
-	var signedInfo = new SignedInfo();
+	var interest = decodeHexInterest(hexInterest);
 	
-	signedInfo.setFields();
-	//var signatureBits = generateSignatureBits(contentname,content,signedInfo);
-	
-	//witness is null
-	var signature = new Signature();
-	
-	
-	var co = new ContentObject("test",signedInfo,"Ceci est un test",signature); 
-	
-	co.sign();
-	
-	var encoder = new BinaryXMLEncoder();
-	
-	co.encode(encoder);
-	
-	var output = encodeToHexContentObject(co);
+	if(interest.Name){
+		console.log("Name associated with the interest: " + interest.Name.getName());
+		
+		var hexContentObject = contentObjectMap[interest.Name.getName()];
+		
+		if(!hexContentObject){
+			console.log("No Content Object associated with the name " + name);
+		}
+		
+		return hexContentObject;
+		
+//		var signedInfo = new SignedInfo();
+//		
+//		signedInfo.setFields();
+//		//var signatureBits = generateSignatureBits(contentname,content,signedInfo);
+		
+		//witness is null
+//		var signature = new Signature();
+//		
+//		
+//		var co = new ContentObject("test",signedInfo,"Ceci est un test",signature); 
+//		
+//		co.sign();
+//		
+//		var encoder = new BinaryXMLEncoder();
+//		
+//		co.encode(encoder);
+//		
+//		var output = encodeToHexContentObject(co);
+	}
+	else {
+		console.log("Incorrect interest received: " + interest);
+		
+		return NULL;
+	}
 
 	
-	return output;
+	//return output;
 }
 
 function on_socket_received_interest(hex,name){
